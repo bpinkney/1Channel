@@ -23,7 +23,7 @@ import utils
 from utils import MODES
 from db_utils import DB_Connection
 
-ADDON = xbmcaddon.Addon(id='plugin.video.1channel')
+ADDON = xbmcaddon.Addon(id='plugin.video.1channel_bp')
 utils.log('Service: Installed Version: %s' % (ADDON.getAddonInfo('version')))
 
 db_connection = DB_Connection()
@@ -109,7 +109,7 @@ class Service(xbmc.Player):
                     utils.log('Service: Threshold met. Marking item as watched', xbmc.LOGDEBUG)
                     video_title = self.meta['title'] if self.video_type == 'movie' else self.meta['TVShowTitle']
                     dbid = self.meta['DBID'] if 'DBID' in self.meta else ''
-                    builtin = 'RunPlugin(plugin://plugin.video.1channel/?mode=%s&imdbnum=%s&video_type=%s&title=%s&season=%s&episode=%s&year=%s&primewire_url=%s&dbid=%s&watched=%s)'
+                    builtin = 'RunPlugin(plugin://plugin.video.1channel_bp/?mode=%s&imdbnum=%s&video_type=%s&title=%s&season=%s&episode=%s&year=%s&primewire_url=%s&dbid=%s&watched=%s)'
                     xbmc.executebuiltin(builtin % (MODES.CH_WATCH, self.imdb_id, videotype, video_title.strip(), self.meta['season'], self.meta['episode'], self.meta['year'], self.primewire_url, dbid, True))
                 db_connection.clear_bookmark(self.primewire_url)
             elif playedTime > 0:

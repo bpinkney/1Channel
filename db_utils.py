@@ -30,7 +30,7 @@ def enum(**enums):
 DB_TYPES = enum(MYSQL='mysql', SQLITE='sqlite')
 CSV_MARKERS = enum(FAVORITES='***FAVORITES***', SUBSCRIPTIONS='***SUBSCRIPTIONS***', BOOKMARKS='***BOOKMARKS***', EXT_SUBS='***EXTERNAL SUBSCRIPTIONS***')
 
-_1CH = Addon('plugin.video.1channel')
+_1CH = Addon('plugin.video.1channel_bp')
 
 class DB_Connection():
     def __init__(self):

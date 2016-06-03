@@ -33,7 +33,7 @@ from addon.common.addon import Addon
 from db_utils import DB_Connection
 
 USER_AGENT = utils.get_ua()
-_1CH = Addon('plugin.video.1channel')
+_1CH = Addon('plugin.video.1channel_bp')
 ADDON_PATH = _1CH.get_path()
 ICON_PATH = os.path.join(ADDON_PATH, 'icon.png')
 MAX_RETRIES = 2
@@ -536,7 +536,7 @@ class PW_Scraper():
 
                 # download the captcha image and save it to a file for use later
                 captchaimgurl = 'http://' + host + '/CaptchaSecurityImages.php'
-                captcha_save_path = xbmc.translatePath('special://userdata/addon_data/plugin.video.1channel/CaptchaSecurityImage.jpg')
+                captcha_save_path = xbmc.translatePath('special://userdata/addon_data/plugin.video.1channel_bp/CaptchaSecurityImage.jpg')
                 req = urllib2.Request(captchaimgurl)
                 host = urlparse.urlparse(self.base_url).hostname
                 req.add_header('User-Agent', USER_AGENT)

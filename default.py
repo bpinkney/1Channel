@@ -45,7 +45,7 @@ from utils import MODES
 from utils import SUB_TYPES
 import gui_utils
 
-_1CH = Addon('plugin.video.1channel', sys.argv)
+_1CH = Addon('plugin.video.1channel_bp', sys.argv)
 META_ON = _1CH.get_setting('use-meta') == 'true'
 FANART_ON = _1CH.get_setting('enable-fanart') == 'true'
 USE_POSTERS = _1CH.get_setting('use-posters') == 'true'
@@ -240,6 +240,11 @@ def get_dbid(video_type, title, season='', episode='', year=''):
 
 def play_filtered_dialog(hosters, title, img, year, imdbnum, video_type, season, episode, primewire_url, resume, dbid):
     sources = []
+
+    #add autoplay button with dummy url:
+    auto_play_media = urlresolver.HostedMediaFile(url=hosters[0]['url'], title='Auto-Play')
+    sources.append(auto_play_media)
+    
     for item in hosters:
         try:
             label = utils.format_label_source(item)
@@ -257,14 +262,22 @@ def play_filtered_dialog(hosters, title, img, year, imdbnum, video_type, season,
 
     source = urlresolver.choose_source(sources)
     if source:
-        source = source.get_url()
+        if(source.title == auto_play_media.title):
+            utils.log('AutoPlay Selected', xbmc.LOGERROR)
+            auto_try_sources(hosters, title, img, year, imdbnum, video_type, season, episode, primewire_url, resume, dbid)
+        else:
+            source = source.get_url()
+            PlaySource(source, title, video_type, primewire_url, resume, imdbnum, year, season, episode, dbid)
     else:
         return
 
-    PlaySource(source, title, video_type, primewire_url, resume, imdbnum, year, season, episode, dbid)
+    
 
 def play_unfiltered_dialog(hosters, title, img, year, imdbnum, video_type, season, episode, primewire_url, resume, dbid):
     sources = []
+
+    sources.append("Auto-Play")
+
     for item in hosters:
         label = utils.format_label_source(item)
         sources.append(label)
@@ -656,7 +669,7 @@ def AddonMenu():  # homescreen
     db_connection.init_database()
     fix_urls()
     if utils.has_upgraded():
-        adn = xbmcaddon.Addon('plugin.video.1channel')
+        adn = xbmcaddon.Addon('plugin.video.1channel_bp')
         adn.setSetting('domain', 'http://www.primewire.ag')
         adn.setSetting('old_version', _1CH.get_version())
     _1CH.add_directory({'mode': MODES.LIST_MENU, 'section': 'movie'}, {'title': i18n('movies')}, img=art('movies.png'),
@@ -1940,7 +1953,7 @@ def main(argv=None):
     utils.log('Version: |%s| Queries: |%s|' % (_1CH.get_version(), _1CH.queries))
     utils.log('Args: |%s|' % (argv))
 
-    # don't process params that don't match our url exactly. (e.g. plugin://plugin.video.1channel/extrafanart)
+    # don't process params that don't match our url exactly. (e.g. plugin://plugin.video.1channel_bp/extrafanart)
     plugin_url = 'plugin://%s/' % (_1CH.get_id())
     if argv[0] != plugin_url:
         return
